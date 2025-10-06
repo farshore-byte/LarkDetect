@@ -31,7 +31,7 @@ class ByteEncoder(nn.Module):
     """
 
     def __init__(self, d_model=128, n_layers=2, n_heads=4, ff=512,
-                 max_len=512, dtype=torch.bfloat16):
+                 max_len=512, dtype=torch.float16):
         super().__init__()
         self.byte_emb = nn.Embedding(
             VOCAB_SIZE, d_model, padding_idx=PAD_BYTE, dtype=dtype
@@ -86,7 +86,7 @@ class BatchBoundaryPredictor(nn.Module):
     预测序列中的 segment 边界
     """
 
-    def __init__(self, d_model, init_tau=0.4, min_tau=0.0001, anneal_rate=1e-4, dtype=torch.bfloat16):
+    def __init__(self, d_model, init_tau=0.4, min_tau=0.0001, anneal_rate=1e-4, dtype=torch.float16):
         super().__init__()
         self.mlp = nn.Sequential(
             nn.Linear(d_model, d_model // 2, dtype=dtype),
@@ -186,7 +186,7 @@ class Decoder(nn.Module):
     """
 
     def __init__(self, d_model, n_heads, n_layers, ff, label_size,
-                 max_len=MAX_LEN, dropout=0.1, dtype=torch.bfloat16):
+                 max_len=MAX_LEN, dropout=0.1, dtype=torch.float16):
         super().__init__()
         self.transformer_layers = nn.ModuleList([
             nn.TransformerEncoderLayer(
@@ -218,7 +218,7 @@ class LarkModel(nn.Module):
     """
 
     def __init__(self, d_model=128, n_layers=2, n_heads=4, ff=512,
-                 label_size=2, dropout=0.1, max_len=MAX_LEN, dtype=torch.bfloat16):
+                 label_size=2, dropout=0.1, max_len=MAX_LEN, dtype=torch.float16):
         super().__init__()
         self.encoder = ByteEncoder(
             d_model=d_model, n_layers=n_layers, n_heads=n_heads,

@@ -18,13 +18,13 @@ Lark is a byte-level language detection model that supports **102 languages** wi
 
 ### From PyPI (Recommended)
 ```bash
-pip install lark-language-detector
+pip install lark-ld==1.0.1
 ```
 
 ### From Source
 ```bash
-git clone https://github.com/jiangchengchengNLP/Lark.git
-cd Lark
+git clone https://github.com/farshore-byte/LarkDetect.git
+cd LarkDetect
 pip install -e .
 ```
 
@@ -106,10 +106,51 @@ This architecture enables:
 
 | Metric | Value |
 |--------|-------|
-| Accuracy | >95% on test set |
+| Overall Accuracy | 90.14% on validation set |
 | Inference Speed | ~1ms per text (CPU) |
-| Model Size | ~15MB |
+| Model Size | 9.28MB (float16) |
+| Precision | float16 (CPU/GPU compatible) |
+| Total Parameters | 4,866,919 |
 | Supported Languages | 102 |
+
+### Training Dataset
+The model was trained on a comprehensive dataset combining:
+- **opus-100** - Multilingual parallel corpus
+- **Mike0307/language-detection** - Language detection dataset
+- **sirgecko___language_detection** - Language detection dataset
+- **papluca/language-identification** - Language identification dataset
+- **sirgecko/language_detection_train** - Language detection training data
+
+**Dataset Statistics:**
+- Train samples: 109,636,748
+- Validation samples: 385,306
+- Total languages: 102
+
+### Evaluation Results
+Detailed per-language evaluation results (accuracy, precision, recall, F1-score) will be available in the evaluation results file. The model achieves 90.14% overall accuracy on the validation dataset.
+
+**Note on Evaluation Data**: While the model achieves strong overall performance, the current evaluation dataset has limited coverage for some languages (e.g., an, dz, hy, mn, yo). This is due to the validation split not containing samples for these languages. However, the training dataset provides comprehensive coverage.
+
+### Training Dataset Details
+The model was trained on a comprehensive dataset combining:
+- **OPUS-100** - Multilingual parallel corpus containing 100 language pairs
+- **Mike0307/language-detection** - Language detection dataset
+- **sirgecko___language_detection** - Language detection dataset
+- **papluca/language-identification** - Language identification dataset
+- **sirgecko/language_detection_train** - Language detection training data
+
+**OPUS-100 Dataset Statistics:**
+- Contains approximately 55 million sentence pairs
+- Covers 99 language pairs
+- 44 language pairs have 1 million+ sentence pairs
+- 73 language pairs have 100,000+ sentence pairs  
+- 95 language pairs have 10,000+ sentence pairs
+- Each language has at least 10,000 training samples
+
+**Dataset Statistics:**
+- Train samples: 109,636,748
+- Validation samples: 385,306
+- Total languages: 102
 
 ## 🔧 API Reference
 
@@ -137,8 +178,8 @@ class LarkDetector:
 
 ### Setup Development Environment
 ```bash
-git clone https://github.com/jiangchengchengNLP/Lark.git
-cd Lark
+git clone https://github.com/farshore-byte/LarkDetect.git
+cd LarkDetect
 pip install -e ".[dev]"
 ```
 
@@ -157,11 +198,11 @@ python setup.py sdist bdist_wheel
 If you use Lark in your research, please cite:
 
 ```bibtex
-@software{lark2024,
+@software{lark2025,
   title={Lark: Byte-Level Language Detection},
-  author={Jiang Chengcheng},
+  author={Farshore AI},
   year={2024},
-  url={https://github.com/jiangchengchengNLP/Lark}
+  url={https://github.com/farshore-byte/LarkDetect}
 }
 ```
 

@@ -7,14 +7,14 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
     requirements = [line.strip() for line in fh if line.strip() and not line.startswith("#")]
 
 setup(
-    name="lark-language-detector",
-    version="1.0.0",
+    name="lark-ld",
+    version="1.0.1",
     author="Farshore AI",
     author_email="3306065226@qq.com",
     description="A byte-level language detection model supporting 102 languages",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/jiangchengchengNLP/Lark",
+    url="https://github.com/farshore-byte/LarkDetect.git",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -34,7 +34,7 @@ setup(
     install_requires=requirements,
     include_package_data=True,
     package_data={
-        "lark": ["*.json", "*.pth"],
+        "lark": ["*.json"],
     },
     entry_points={
         "console_scripts": [

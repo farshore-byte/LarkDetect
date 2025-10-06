@@ -5,9 +5,37 @@ LarkDetector - Main interface for language detection
 import torch
 import json
 import os
+import requests
 from typing import List, Tuple, Dict, Optional
 from .model import LarkModel
 from .tokenizer import batch_tokenize
+
+
+def download_from_huggingface(url: str, local_path: str, timeout: int = 10) -> bool:
+    """
+    Download file from HuggingFace with timeout.
+    
+    Args:
+        url: HuggingFace file URL
+        local_path: Local path to save the file
+        timeout: Download timeout in seconds
+        
+    Returns:
+        True if download successful, False otherwise
+    """
+    try:
+        print(f"📥 Downloading from {url}...")
+        response = requests.get(url, timeout=timeout)
+        response.raise_for_status()
+        
+        with open(local_path, 'wb') as f:
+            f.write(response.content)
+        
+        print(f"✅ Downloaded successfully: {local_path}")
+        return True
+    except Exception as e:
+        print(f"❌ Download failed: {e}")
+        return False
 
 
 class LarkDetector:
@@ -31,6 +59,19 @@ class LarkDetector:
             model_path = os.path.join(os.path.dirname(__file__), "..", "lark_epoch1.pth")
         if labels_path is None:
             labels_path = os.path.join(os.path.dirname(__file__), "..", "all_dataset_labels.json")
+        
+        # Download model and labels if they don't exist
+        if not os.path.exists(model_path):
+            print("🔍 Model file not found locally, downloading from HuggingFace...")
+            model_url = "https://hf-mirror.com/jiangchengchengNLP/Lark/resolve/main/lark_epoch1.pth"
+            if not download_from_huggingface(model_url, model_path):
+                print("⚠️ Using randomly initialized model")
+        
+        if not os.path.exists(labels_path):
+            print("🔍 Labels file not found locally, downloading from HuggingFace...")
+            labels_url = "https://hf-mirror.com/jiangchengchengNLP/Lark/resolve/main/all_dataset_labels.json"
+            if not download_from_huggingface(labels_url, labels_path):
+                raise FileNotFoundError("Labels file not found and download failed")
         
         # Load model
         self.model = LarkModel(
@@ -111,7 +152,7 @@ class LarkDetector:
         top_k = []
         for prob, idx in zip(top_probs, top_indices):
             top_k.append({
-                "language": self.id2label[idx.item()],
+                "language": self.id2label[int(idx.item())],
                 "probability": prob.item()
             })
         
@@ -176,7 +217,7 @@ class LarkDetector:
         
         # Get predictions
         preds = torch.argmax(cls_logits, dim=-1)
-        predictions = [self.id2label[p.item()] for p in preds]
+        predictions = [self.id2label[int(p.item())] for p in preds]
         
         return predictions, probabilities
 
