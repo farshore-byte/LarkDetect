@@ -3,8 +3,95 @@
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![中文文档](https://img.shields.io/badge/文档-中文-blue.svg)](README_zh.md)
 
-Lark is a byte-level language detection model that supports **102 languages** with high accuracy and efficiency.
+<div align="center">
+  <h3>🌍 支持 102 种语言的字节级语言检测模型</h3>
+  <p>高精度、高效率的语言识别解决方案</p>
+  
+  <p>
+    <a href="README_zh.md">中文文档</a> | 
+    <a href="#english-documentation">English Documentation</a>
+  </p>
+</div>
+
+---
+
+## 🚀 特性
+
+- **102 种语言**: 支持包括英语、中文、日语、西班牙语、法语等在内的广泛语言
+- **字节级处理**: 无词汇表限制，可处理任何 Unicode 文本
+- **高精度**: 在语言检测任务上达到最先进的性能
+- **快速推理**: 针对 CPU 和 GPU 优化
+- **易于集成**: 简单的 API，支持批量和单文本处理
+
+## 📦 安装
+
+### 从 PyPI 安装（推荐）
+```bash
+pip install lark-ld==1.0.1
+```
+
+### 从源码安装
+```bash
+git clone https://github.com/farshore-byte/LarkDetect.git
+cd LarkDetect
+pip install -e .
+```
+
+## 🎯 快速开始
+
+### 基础用法
+```python
+from lark import LarkDetector
+
+# 初始化检测器
+detector = LarkDetector()
+
+# 检测单个文本的语言
+text = "Hello, how are you today?"
+language, confidence = detector.detect(text)
+print(f"语言: {language}, 置信度: {confidence:.4f}")
+
+# 批量检测
+texts = [
+    "Hello world!",
+    "今天天气真好",
+    "こんにちは、元気ですか？"
+]
+results = detector.detect_batch(texts)
+for text, (lang, conf) in zip(texts, results):
+    print(f"'{text}' -> {lang} ({conf:.4f})")
+```
+
+## 📊 性能指标
+
+| 指标 | 数值 |
+|------|------|
+| 总体准确率 | **89.61%** 在验证集上（97 种有样本的语言） |
+| 推理速度 | ~1ms 每文本（CPU） |
+| 模型大小 | 9.28MB (float16) |
+| 精度 | float16 (CPU/GPU 兼容) |
+| 总参数 | 4,866,919 |
+| 支持语言 | 102 |
+
+---
+
+<div id="english-documentation"></div>
+
+# Lark - Byte-Level Language Detection
+
+<div align="center">
+  <h3>🌍 Byte-Level Language Detection Supporting 102 Languages</h3>
+  <p>High-accuracy, efficient language identification solution</p>
+  
+  <p>
+    <a href="#chinese-documentation">中文文档</a> | 
+    <a href="README.md">English Documentation</a>
+  </p>
+</div>
+
+---
 
 ## 🚀 Features
 
@@ -53,158 +140,24 @@ for text, (lang, conf) in zip(texts, results):
     print(f"'{text}' -> {lang} ({conf:.4f})")
 ```
 
-### Advanced Usage
-```python
-from lark import LarkDetector
-
-detector = LarkDetector()
-
-# Get top-k predictions
-text = "This is a sample text"
-prediction, confidence, top_k = detector.detect_with_topk(text, k=5)
-print(f"Prediction: {prediction} (Confidence: {confidence:.4f})")
-print("Top 5 predictions:")
-for i, item in enumerate(top_k):
-    print(f"  {i+1}. {item['language']:8} - {item['probability']:.4f}")
-
-# Confidence threshold
-language, confidence, top_k = detector.detect_with_confidence(
-    text, 
-    confidence_threshold=0.7
-)
-if language == "unknown":
-    print(f"Low confidence: {confidence:.4f}")
-else:
-    print(f"Detected: {language} (Confidence: {confidence:.4f})")
-```
-
-## 📊 Supported Languages
-
-Lark supports 102 languages including:
-
-- **European**: English, Spanish, French, German, Italian, Russian, etc.
-- **Asian**: Chinese, Japanese, Korean, Hindi, Arabic, Thai, etc.
-- **African**: Swahili, Yoruba, Zulu, etc.
-- **Others**: And many more...
-
-See the full list in [all_dataset_labels.json](all_dataset_labels.json).
-
-## 🏗️ Model Architecture
-
-Lark uses a novel byte-level architecture:
-
-1. **Byte Encoder**: Converts raw bytes to contextual representations
-2. **Boundary Predictor**: Identifies segment boundaries using Gumbel-Sigmoid
-3. **Segment Decoder**: Processes segments for language classification
-
-This architecture enables:
-- No vocabulary limitations
-- Robust handling of mixed-language text
-- Efficient processing of long documents
-
-## 📈 Performance
+## 📊 Performance
 
 | Metric | Value |
 |--------|-------|
-| Overall Accuracy | 90.14% on validation set |
+| Overall Accuracy | **89.61%** on validation set (97 languages with samples) |
 | Inference Speed | ~1ms per text (CPU) |
 | Model Size | 9.28MB (float16) |
 | Precision | float16 (CPU/GPU compatible) |
 | Total Parameters | 4,866,919 |
 | Supported Languages | 102 |
 
-### Training Dataset
-The model was trained on a comprehensive dataset combining:
-- **opus-100** - Multilingual parallel corpus
-- **Mike0307/language-detection** - Language detection dataset
-- **sirgecko___language_detection** - Language detection dataset
-- **papluca/language-identification** - Language identification dataset
-- **sirgecko/language_detection_train** - Language detection training data
+---
 
-**Dataset Statistics:**
-- Train samples: 109,636,748
-- Validation samples: 385,306
-- Total languages: 102
+## 📝 More Information
 
-### Evaluation Results
-Detailed per-language evaluation results (accuracy, precision, recall, F1-score) will be available in the evaluation results file. The model achieves 90.14% overall accuracy on the validation dataset.
-
-**Note on Evaluation Data**: While the model achieves strong overall performance, the current evaluation dataset has limited coverage for some languages (e.g., an, dz, hy, mn, yo). This is due to the validation split not containing samples for these languages. However, the training dataset provides comprehensive coverage.
-
-### Training Dataset Details
-The model was trained on a comprehensive dataset combining:
-- **OPUS-100** - Multilingual parallel corpus containing 100 language pairs
-- **Mike0307/language-detection** - Language detection dataset
-- **sirgecko___language_detection** - Language detection dataset
-- **papluca/language-identification** - Language identification dataset
-- **sirgecko/language_detection_train** - Language detection training data
-
-**OPUS-100 Dataset Statistics:**
-- Contains approximately 55 million sentence pairs
-- Covers 99 language pairs
-- 44 language pairs have 1 million+ sentence pairs
-- 73 language pairs have 100,000+ sentence pairs  
-- 95 language pairs have 10,000+ sentence pairs
-- Each language has at least 10,000 training samples
-
-**Dataset Statistics:**
-- Train samples: 109,636,748
-- Validation samples: 385,306
-- Total languages: 102
-
-## 🔧 API Reference
-
-### LarkDetector Class
-
-```python
-class LarkDetector:
-    def __init__(self, model_path: str = None, labels_path: str = None):
-        """Initialize the language detector"""
-    
-    def detect(self, text: str) -> Tuple[str, float]:
-        """Detect language for single text"""
-    
-    def detect_batch(self, texts: List[str]) -> List[Tuple[str, float]]:
-        """Batch language detection"""
-    
-    def detect_with_topk(self, text: str, k: int = 5) -> Tuple[str, float, List[Dict]]:
-        """Get top-k predictions with probabilities"""
-    
-    def detect_with_confidence(self, text: str, confidence_threshold: float = 0.5) -> Tuple[str, float, List[Dict]]:
-        """Detection with confidence threshold"""
-```
-
-## 🛠️ Development
-
-### Setup Development Environment
-```bash
-git clone https://github.com/farshore-byte/LarkDetect.git
-cd LarkDetect
-pip install -e ".[dev]"
-```
-
-### Running Tests
-```bash
-python -m pytest tests/
-```
-
-### Building from Source
-```bash
-python setup.py sdist bdist_wheel
-```
-
-## 📝 Citation
-
-If you use Lark in your research, please cite:
-
-```bibtex
-@software{lark2025,
-  title={Lark: Byte-Level Language Detection},
-  author={Farshore AI},
-  year={2024},
-  url={https://github.com/farshore-byte/LarkDetect}
-}
-```
+For detailed documentation, please see:
+- **[中文详细文档](README_zh.md)** - Complete Chinese documentation
+- **[English Full Documentation](README.md)** - Complete English documentation
 
 ## 🤝 Contributing
 
@@ -213,9 +166,3 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for deta
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Thanks to the open-source community for datasets and tools
-- Inspired by modern language detection approaches
-- Built with PyTorch and Hugging Face ecosystem
