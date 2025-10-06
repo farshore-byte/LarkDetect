@@ -11,7 +11,7 @@
   <p>High-accuracy, efficient language identification solution</p>
   
   <p>
-    <a href="#chinese-documentation">中文文档</a> | 
+    <a href="README_zh.md">中文文档</a> | 
     <a href="README.md">English Documentation</a>
   </p>
 </div>
