@@ -5,11 +5,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![中文文档](https://img.shields.io/badge/文档-中文-blue.svg)](README_zh.md)
 
----
-
-<div id="english-documentation"></div>
-
-# Lark - Byte-Level Language Detection
 
 <div align="center">
   <h3>🌍 Byte-Level Language Detection Supporting 102 Languages</h3>
