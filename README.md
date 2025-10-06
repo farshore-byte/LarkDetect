@@ -76,6 +76,8 @@ for text, (lang, conf) in zip(texts, results):
 | Total Parameters | 4,866,919 |
 | Supported Languages | 102 |
 
+**Detailed Evaluation**: See [classification report](classification_report.txt) for per-language metrics (precision, recall, F1-score).
+
 ---
 
 ## 📝 More Information
